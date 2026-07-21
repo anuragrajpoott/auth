@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
+import { Schema, model } from "mongoose";
 import validator from "validator";
 
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema(
     {
         name: {
             type: String,
@@ -82,8 +82,8 @@ userSchema.pre("save", async function (next) {
 });
 
 // Compare password
-userSchema.methods.comparePassword = async function (password) {
-    return await bcrypt.compare(password, this.password);
+userSchema.methods.comparePassword = function (password) {
+    return bcrypt.compare(password, this.password);
 };
 
 // Generate Access Token
@@ -113,6 +113,6 @@ userSchema.methods.generateRefreshToken = function () {
     );
 };
 
-const User = mongoose.model("User", userSchema);
+const User = model("User", userSchema);
 
 export default User;

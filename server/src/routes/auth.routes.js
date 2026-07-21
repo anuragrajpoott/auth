@@ -1,19 +1,17 @@
 import { Router } from "express";
 
-import {
-    register,
-    verifyEmail,
-    resendVerificationOtp,
-    login,
-    logout,
-    refreshAccessToken,
-    forgotPassword,
-    verifyResetOtp,
-    resetPassword,
-    getCurrentUser,
-    changePassword,
-    deleteAccount,
-} from "../controllers/auth.controller.js";
+import changePassword from "../controllers/changePassword.controller.js";
+import deleteAccount from "../controllers/deleteAccount.controller.js";
+import forgotPassword from "../controllers/forgotPassword.controller.js";
+import getCurrentUser from "../controllers/getCurrentUser.controller.js";
+import login from "../controllers/login.controller.js";
+import logout from "../controllers/logout.controller.js";
+import refreshAccessToken from "../controllers/refreshAccessToken.controller.js";
+import register from "../controllers/register.controller.js";
+import resendVerificationOtp from "../controllers/resendVerificationOtp.controller.js";
+import resetPassword from "../controllers/resetPassword.controller.js";
+import verifyEmail from "../controllers/verifyEmail.controller.js";
+import verifyResetOtp from "../controllers/verifyResetOtp.controller.js";
 
 import { authenticate } from "../middlewares/auth.middleware.js";
 

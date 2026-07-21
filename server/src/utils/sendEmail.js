@@ -9,6 +9,10 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendEmail = async ({ to, subject, html }) => {
+    if (!to || !subject || !html) {
+        throw new Error("Missing required email fields.");
+    }
+
     await transporter.sendMail({
         from: `"AuthFlow" <${process.env.EMAIL_USER}>`,
         to,

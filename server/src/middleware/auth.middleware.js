@@ -5,23 +5,23 @@ import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const authenticate = asyncHandler(async (req, res, next) => {
-    let token;
-
-    // From Cookie
-    if (req.cookies?.accessToken) {
-        token = req.cookies.accessToken;
-    }
-
-    // From Authorization Header
-    if (!token && req.headers.authorization?.startsWith("Bearer ")) {
-        token = req.headers.authorization.split(" ")[1];
-    }
+    const token =
+        req.cookies?.accessToken ??
+        (req.headers.authorization?.startsWith("Bearer ")
+            ? req.headers.authorization.replace("Bearer ", "")
+            : null);
 
     if (!token) {
         throw new ApiError(401, "Authentication required.");
     }
 
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    let decoded;
+
+    try {
+        decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    } catch {
+        throw new ApiError(401, "Invalid or expired token.");
+    }
 
     const user = await User.findById(decoded.id);
 
@@ -30,16 +30,13 @@ export const authenticate = asyncHandler(async (req, res, next) => {
     }
 
     req.user = user;
-
     next();
 });
 
-export const authorize = (...roles) => {
-    return (req, res, next) => {
-        if (!roles.includes(req.user.role)) {
-            throw new ApiError(403, "You are not authorized to access this resource.");
-        }
+export const authorize = (...roles) => (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+        throw new ApiError(403, "You are not authorized to access this resource.");
+    }
 
-        next();
-    };
+    next();
 };
