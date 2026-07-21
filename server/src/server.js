@@ -5,7 +5,7 @@ dotenv.config();
 import app from "./app.js";
 import connectDB from "./config/database.js";
 
-const PORT = process.env.PORT || 5000;
+const { PORT = 5000 } = process.env;
 
 const startServer = async () => {
     try {
@@ -15,7 +15,7 @@ const startServer = async () => {
             console.log(`🚀 Server running on http://localhost:${PORT}`);
         });
     } catch (error) {
-        console.error("❌ Failed to start server:", error.message);
+        console.error(`❌ Failed to start server: ${error.message}`);
         process.exit(1);
     }
 };

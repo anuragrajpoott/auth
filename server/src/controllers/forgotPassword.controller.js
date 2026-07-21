@@ -1,4 +1,4 @@
-import User from "../models/User.js";
+import User from "../models/user.model.js";
 
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
@@ -26,9 +26,9 @@ const forgotPassword = asyncHandler(async (req, res) => {
     const otp = generateOtp();
 
     user.resetPasswordOtp = hashOtp(otp);
-    user.resetPasswordOtpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+    user.resetPasswordOtpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     await sendEmail({
         to: user.email,
@@ -37,7 +37,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
     return res
         .status(200)
-        .json(new ApiResponse(200, null, "Password reset OTP sent."));
+        .json(new ApiResponse(200, "Password reset OTP sent."));
 });
 
 export default forgotPassword;

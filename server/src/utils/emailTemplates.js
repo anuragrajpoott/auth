@@ -1,4 +1,5 @@
 const appName = process.env.APP_NAME || "Your App";
+const otpValidityNote = "This OTP is valid for 10 minutes.";
 
 const baseTemplate = ({ title, greeting, message, otp, note }) => `
 <!DOCTYPE html>
@@ -15,17 +16,13 @@ const baseTemplate = ({ title, greeting, message, otp, note }) => `
                 <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:10px;padding:40px;">
                     <tr>
                         <td align="center">
-                            <h1 style="margin:0;color:#2563eb;">
-                                ${appName}
-                            </h1>
+                            <h1 style="margin:0;color:#2563eb;">${appName}</h1>
                         </td>
                     </tr>
 
                     <tr>
                         <td style="padding-top:30px;">
-                            <h2 style="margin:0;color:#222;">
-                                ${greeting}
-                            </h2>
+                            <h2 style="margin:0;color:#222;">${greeting}</h2>
                         </td>
                     </tr>
 
@@ -40,13 +37,13 @@ const baseTemplate = ({ title, greeting, message, otp, note }) => `
                             <div
                                 style="
                                     display:inline-block;
+                                    padding:18px 35px;
+                                    background:#eef4ff;
+                                    border-radius:8px;
+                                    color:#2563eb;
                                     font-size:32px;
                                     font-weight:bold;
                                     letter-spacing:8px;
-                                    color:#2563eb;
-                                    background:#eef4ff;
-                                    padding:18px 35px;
-                                    border-radius:8px;
                                 "
                             >
                                 ${otp}
@@ -88,33 +85,29 @@ const baseTemplate = ({ title, greeting, message, otp, note }) => `
 `;
 
 const emailTemplates = {
-    verifyEmail(name, otp) {
-        return {
-            subject: "Verify Your Email",
-            html: baseTemplate({
-                title: "Email Verification",
-                greeting: `Hello ${name},`,
-                message:
-                    "Thank you for registering. Use the OTP below to verify your email address.",
-                otp,
-                note: "This OTP is valid for 10 minutes.",
-            }),
-        };
-    },
+    verifyEmail: (name, otp) => ({
+        subject: "Verify Your Email",
+        html: baseTemplate({
+            title: "Email Verification",
+            greeting: `Hello ${name},`,
+            message:
+                "Thank you for registering. Use the OTP below to verify your email address.",
+            otp,
+            note: otpValidityNote,
+        }),
+    }),
 
-    resetPassword(name, otp) {
-        return {
-            subject: "Reset Your Password",
-            html: baseTemplate({
-                title: "Password Reset",
-                greeting: `Hello ${name},`,
-                message:
-                    "We received a request to reset your password. Use the OTP below to continue.",
-                otp,
-                note: "This OTP is valid for 10 minutes.",
-            }),
-        };
-    },
+    resetPassword: (name, otp) => ({
+        subject: "Reset Your Password",
+        html: baseTemplate({
+            title: "Password Reset",
+            greeting: `Hello ${name},`,
+            message:
+                "We received a request to reset your password. Use the OTP below to continue.",
+            otp,
+            note: otpValidityNote,
+        }),
+    }),
 };
 
 export default emailTemplates;

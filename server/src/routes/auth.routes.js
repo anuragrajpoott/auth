@@ -13,7 +13,7 @@ import resetPassword from "../controllers/resetPassword.controller.js";
 import verifyEmail from "../controllers/verifyEmail.controller.js";
 import verifyResetOtp from "../controllers/verifyResetOtp.controller.js";
 
-import { authenticate } from "../middlewares/auth.middleware.js";
+import { authenticate } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
@@ -21,7 +21,6 @@ const router = Router();
 router.post("/register", register);
 router.post("/verify-email", verifyEmail);
 router.post("/resend-verification-otp", resendVerificationOtp);
-
 router.post("/login", login);
 router.post("/logout", authenticate, logout);
 router.post("/refresh-token", refreshAccessToken);

@@ -14,7 +14,10 @@ const generateTokens = async (userId) => {
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
 
-    return { accessToken, refreshToken };
+    return {
+        accessToken,
+        refreshToken,
+    };
 };
 
 export default generateTokens;

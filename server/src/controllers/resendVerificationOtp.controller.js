@@ -1,4 +1,4 @@
-import User from "../models/User.js";
+import User from "../models/user.model.js";
 
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
@@ -30,24 +30,18 @@ const resendVerificationOtp = asyncHandler(async (req, res) => {
     const otp = generateOtp();
 
     user.verificationOtp = hashOtp(otp);
-    user.verificationOtpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+    user.verificationOtpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     await sendEmail({
         to: user.email,
         ...emailTemplates.verifyEmail(user.name, otp),
     });
 
-    return res
-        .status(200)
-        .json(
-            new ApiResponse(
-                200,
-                null,
-                "Verification OTP sent successfully."
-            )
-        );
+    return res.status(200).json(
+        new ApiResponse(200, "Verification OTP sent successfully.")
+    );
 });
 
 export default resendVerificationOtp;

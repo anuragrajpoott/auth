@@ -1,9 +1,8 @@
-import User from "../models/User.js";
+import User from "../models/user.model.js";
 
 import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
-
-import cookieOptions from "../config/cookieOptions.js";
+import { cookieOptions } from "../utils/cookieOptions.js";
 
 const deleteAccount = asyncHandler(async (req, res) => {
     await User.findByIdAndDelete(req.user._id);
@@ -12,7 +11,7 @@ const deleteAccount = asyncHandler(async (req, res) => {
         .status(200)
         .clearCookie("accessToken", cookieOptions)
         .clearCookie("refreshToken", cookieOptions)
-        .json(new ApiResponse(200, null, "Account deleted successfully."));
+        .json(new ApiResponse(200, "Account deleted successfully."));
 });
 
 export default deleteAccount;

@@ -1,4 +1,4 @@
-import User from "../models/User.js";
+import User from "../models/user.model.js";
 
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
@@ -13,7 +13,9 @@ const verifyEmail = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Email and OTP are required.");
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select(
+        "+verificationOtp +verificationOtpExpiresAt"
+    );
 
     if (!user) {
         throw new ApiError(404, "User not found.");
@@ -25,28 +27,26 @@ const verifyEmail = asyncHandler(async (req, res) => {
 
     const isOtpExpired =
         !user.verificationOtp ||
-        !user.verificationOtpExpiry ||
-        user.verificationOtpExpiry < new Date();
+        !user.verificationOtpExpiresAt ||
+        user.verificationOtpExpiresAt < new Date();
 
     if (isOtpExpired) {
         throw new ApiError(400, "OTP expired.");
     }
 
-    const isOtpValid = user.verificationOtp === hashOtp(otp);
-
-    if (!isOtpValid) {
+    if (user.verificationOtp !== hashOtp(otp)) {
         throw new ApiError(400, "Invalid OTP.");
     }
 
     user.isVerified = true;
     user.verificationOtp = undefined;
-    user.verificationOtpExpiry = undefined;
+    user.verificationOtpExpiresAt = undefined;
 
     await user.save();
 
     return res
         .status(200)
-        .json(new ApiResponse(200, null, "Email verified successfully."));
+        .json(new ApiResponse(200, "Email verified successfully."));
 });
 
 export default verifyEmail;
