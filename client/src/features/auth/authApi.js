@@ -1,67 +1,36 @@
 import api from "../../services/axios";
 
-export const registerUser = async (payload) => {
-  const response = await api.post("/auth/register", payload);
-  return response.data;
-};
+const get = async (url) => (await api.get(url)).data;
+const post = async (url, payload) => (await api.post(url, payload)).data;
+const patch = async (url, payload) => (await api.patch(url, payload)).data;
+const remove = async (url) => (await api.delete(url)).data;
 
-export const verifyEmail = async (payload) => {
-  const response = await api.post("/auth/verify-email", payload);
-  return response.data;
-};
+export const registerUser = (payload) => post("/auth/register", payload);
 
-export const resendVerificationOtp = async (payload) => {
-  const response = await api.post(
-    "/auth/resend-verification-otp",
-    payload
-  );
-  return response.data;
-};
+export const verifyEmail = (payload) =>
+  post("/auth/verify-email", payload);
 
-export const loginUser = async (payload) => {
-  const response = await api.post("/auth/login", payload);
-  return response.data;
-};
+export const resendVerificationOtp = (payload) =>
+  post("/auth/resend-verification-otp", payload);
 
-export const logoutUser = async () => {
-  const response = await api.post("/auth/logout");
-  return response.data;
-};
+export const loginUser = (payload) => post("/auth/login", payload);
 
-export const refreshToken = async () => {
-  const response = await api.post("/auth/refresh-token");
-  return response.data;
-};
+export const logoutUser = () => post("/auth/logout");
 
-export const getCurrentUser = async () => {
-  const response = await api.get("/auth/me");
-  return response.data;
-};
+export const refreshToken = () => post("/auth/refresh-token");
 
-export const forgotPassword = async (payload) => {
-  const response = await api.post("/auth/forgot-password", payload);
-  return response.data;
-};
+export const getCurrentUser = () => get("/auth/me");
 
-export const verifyResetOtp = async (payload) => {
-  const response = await api.post("/auth/verify-reset-otp", payload);
-  return response.data;
-};
+export const forgotPassword = (payload) =>
+  post("/auth/forgot-password", payload);
 
-export const resetPassword = async (payload) => {
-  const response = await api.post("/auth/reset-password", payload);
-  return response.data;
-};
+export const verifyResetOtp = (payload) =>
+  post("/auth/verify-reset-otp", payload);
 
-export const changePassword = async (payload) => {
-  const response = await api.patch(
-    "/auth/change-password",
-    payload
-  );
-  return response.data;
-};
+export const resetPassword = (payload) =>
+  post("/auth/reset-password", payload);
 
-export const deleteAccount = async () => {
-  const response = await api.delete("/auth/delete-account");
-  return response.data;
-};
+export const changePassword = (payload) =>
+  patch("/auth/change-password", payload);
+
+export const deleteAccount = () => remove("/auth/delete-account");

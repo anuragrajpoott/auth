@@ -1,6 +1,6 @@
-import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import {
   resendVerificationOtp,
@@ -10,6 +10,22 @@ import {
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
+
+const emailValidation = {
+  required: "Email is required.",
+  pattern: {
+    value: /^\S+@\S+\.\S+$/,
+    message: "Please enter a valid email address.",
+  },
+};
+
+const otpValidation = {
+  required: "OTP is required.",
+  pattern: {
+    value: /^\d{6}$/,
+    message: "OTP must be exactly 6 digits.",
+  },
+};
 
 function VerifyEmail() {
   const navigate = useNavigate();
@@ -42,15 +58,17 @@ function VerifyEmail() {
   };
 
   const handleResendOtp = async () => {
-    const email = getValues("email");
+    const currentEmail = getValues("email");
 
-    if (!email) {
+    if (!currentEmail) {
       toast.error("Please enter your email.");
       return;
     }
 
     try {
-      const response = await resendVerificationOtp({ email });
+      const response = await resendVerificationOtp({
+        email: currentEmail,
+      });
 
       toast.success(response.message || "OTP sent successfully.");
     } catch (error) {
@@ -78,34 +96,26 @@ function VerifyEmail() {
         <form
           onSubmit={handleSubmit(handleVerify)}
           className="space-y-5"
+          aria-label="Email verification form"
           noValidate
         >
           <Input
             label="Email"
             type="email"
             placeholder="Enter your email"
+            autoComplete="email"
             error={errors.email?.message}
-            {...register("email", {
-              required: "Email is required.",
-              pattern: {
-                value: /^\S+@\S+\.\S+$/,
-                message: "Please enter a valid email address.",
-              },
-            })}
+            {...register("email", emailValidation)}
           />
 
           <Input
             label="OTP"
             placeholder="Enter 6-digit OTP"
+            autoComplete="one-time-code"
+            inputMode="numeric"
             maxLength={6}
             error={errors.otp?.message}
-            {...register("otp", {
-              required: "OTP is required.",
-              pattern: {
-                value: /^\d{6}$/,
-                message: "OTP must be exactly 6 digits.",
-              },
-            })}
+            {...register("otp", otpValidation)}
           />
 
           <Button

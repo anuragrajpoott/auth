@@ -23,11 +23,12 @@ function Button({
     <button
       type={type}
       disabled={disabled || isLoading}
+      aria-busy={isLoading}
       className={clsx(
         "inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
         "disabled:cursor-not-allowed disabled:opacity-60",
-        variants[variant],
+        variants[variant] ?? variants.primary,
         fullWidth && "w-full",
         className
       )}
@@ -35,7 +36,10 @@ function Button({
     >
       {isLoading ? (
         <span className="flex items-center gap-2">
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+          <span
+            aria-hidden="true"
+            className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+          />
           Loading...
         </span>
       ) : (

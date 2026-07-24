@@ -4,6 +4,7 @@ import clsx from "clsx";
 const Input = forwardRef(
   (
     {
+      id,
       label,
       error,
       helperText,
@@ -13,13 +14,16 @@ const Input = forwardRef(
     },
     ref
   ) => {
-    const id = useId();
+    const generatedId = useId();
+    const inputId = id ?? generatedId;
+    const helperTextId = `${inputId}-helper`;
+    const errorId = `${inputId}-error`;
 
     return (
       <div className="w-full">
         {label && (
           <label
-            htmlFor={id}
+            htmlFor={inputId}
             className="mb-2 block text-sm font-medium text-slate-700"
           >
             {label}
@@ -27,10 +31,17 @@ const Input = forwardRef(
         )}
 
         <input
-          id={id}
+          id={inputId}
           ref={ref}
           type={type}
-          aria-invalid={!!error}
+          aria-invalid={Boolean(error)}
+          aria-describedby={
+            error
+              ? errorId
+              : helperText
+              ? helperTextId
+              : undefined
+          }
           className={clsx(
             "w-full rounded-lg border bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400",
             "transition-colors duration-200",
@@ -45,9 +56,13 @@ const Input = forwardRef(
         />
 
         {error ? (
-          <p className="mt-1 text-sm text-red-600">{error}</p>
+          <p id={errorId} className="mt-1 text-sm text-red-600">
+            {error}
+          </p>
         ) : helperText ? (
-          <p className="mt-1 text-sm text-slate-500">{helperText}</p>
+          <p id={helperTextId} className="mt-1 text-sm text-slate-500">
+            {helperText}
+          </p>
         ) : null}
       </div>
     );

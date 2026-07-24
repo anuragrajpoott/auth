@@ -11,10 +11,7 @@ import sendEmail from "../utils/sendEmail.js";
 import emailTemplates from "../utils/emailTemplates.js";
 
 const register = asyncHandler(async (req, res) => {
-
     const { name, email, password } = req.body;
-
-    
 
     if (!name || !email || !password) {
         throw new ApiError(400, "All fields are required.");
@@ -36,10 +33,19 @@ const register = asyncHandler(async (req, res) => {
         verificationOtpExpiresAt: new Date(Date.now() + 10 * 60 * 1000),
     });
 
-    await sendEmail({
-        to: user.email,
-        ...emailTemplates.verifyEmail(user.name, otp),
-    });
+    try {
+        await sendEmail({
+            to: user.email,
+            ...emailTemplates.verifyEmail(user.name, otp),
+        });
+    } catch (error) {
+        await User.findByIdAndDelete(user._id);
+
+        throw new ApiError(
+            500,
+            "Failed to send verification email. Please try again."
+        );
+    }
 
     return res.status(201).json(
         new ApiResponse(

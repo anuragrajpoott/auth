@@ -1,12 +1,19 @@
-import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
 
 import { forgotPassword } from "../features/auth/authApi";
-
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
+
+const emailValidation = {
+  required: "Email is required.",
+  pattern: {
+    value: /^\S+@\S+\.\S+$/,
+    message: "Please enter a valid email address.",
+  },
+};
 
 function ForgotPassword() {
   const navigate = useNavigate();
@@ -60,20 +67,16 @@ function ForgotPassword() {
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-5"
+          aria-label="Forgot password form"
           noValidate
         >
           <Input
             label="Email"
             type="email"
             placeholder="Enter your email"
+            autoComplete="email"
             error={errors.email?.message}
-            {...register("email", {
-              required: "Email is required.",
-              pattern: {
-                value: /^\S+@\S+\.\S+$/,
-                message: "Please enter a valid email address.",
-              },
-            })}
+            {...register("email", emailValidation)}
           />
 
           <Button

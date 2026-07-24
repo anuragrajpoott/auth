@@ -1,6 +1,6 @@
-import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
 
 import { registerUser } from "../features/auth/authApi";
 
@@ -8,6 +8,32 @@ import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import PasswordInput from "../components/ui/PasswordInput";
+
+const nameValidation = {
+  required: "Full name is required.",
+  minLength: {
+    value: 2,
+    message: "Name must be at least 2 characters.",
+  },
+};
+
+const emailValidation = {
+  required: "Email is required.",
+  pattern: {
+    value: /^\S+@\S+\.\S+$/,
+    message: "Please enter a valid email address.",
+  },
+};
+
+const passwordValidation = {
+  required: "Password is required.",
+  pattern: {
+    value:
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/,
+    message:
+      "Password must contain uppercase, lowercase, number and special character.",
+  },
+};
 
 function Register() {
   const navigate = useNavigate();
@@ -29,7 +55,8 @@ function Register() {
       const response = await registerUser(data);
 
       toast.success(
-        response.message || "Registration successful. Please verify your email."
+        response.message ||
+          "Registration successful. Please verify your email."
       );
 
       navigate("/verify-email", {
@@ -61,49 +88,33 @@ function Register() {
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-5"
+          aria-label="Registration form"
           noValidate
         >
           <Input
             label="Full Name"
             placeholder="Enter your full name"
+            autoComplete="name"
             error={errors.name?.message}
-            {...register("name", {
-              required: "Full name is required.",
-              minLength: {
-                value: 2,
-                message: "Name must be at least 2 characters.",
-              },
-            })}
+            {...register("name", nameValidation)}
           />
 
           <Input
             label="Email"
             type="email"
             placeholder="Enter your email"
+            autoComplete="email"
             error={errors.email?.message}
-            {...register("email", {
-              required: "Email is required.",
-              pattern: {
-                value: /^\S+@\S+\.\S+$/,
-                message: "Please enter a valid email address.",
-              },
-            })}
+            {...register("email", emailValidation)}
           />
 
           <PasswordInput
             label="Password"
             placeholder="Create a password"
+            autoComplete="new-password"
             error={errors.password?.message}
             helperText="Use at least 8 characters with uppercase, lowercase, number and special character."
-            {...register("password", {
-              required: "Password is required.",
-              pattern: {
-                value:
-                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/,
-                message:
-                  "Password must contain uppercase, lowercase, number and special character.",
-              },
-            })}
+            {...register("password", passwordValidation)}
           />
 
           <Button

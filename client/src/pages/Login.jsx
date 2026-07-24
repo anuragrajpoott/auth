@@ -1,15 +1,27 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { loginUser } from "../features/auth/authApi";
 import { setUser } from "../features/auth/authSlice";
 
+import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import PasswordInput from "../components/ui/PasswordInput";
-import Button from "../components/ui/Button";
+
+const emailValidation = {
+  required: "Email is required.",
+  pattern: {
+    value: /^\S+@\S+\.\S+$/,
+    message: "Please enter a valid email address.",
+  },
+};
+
+const passwordValidation = {
+  required: "Password is required.",
+};
 
 function Login() {
   const dispatch = useDispatch();
@@ -62,29 +74,24 @@ function Login() {
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-5"
+          aria-label="Login form"
           noValidate
         >
           <Input
             label="Email"
             type="email"
             placeholder="Enter your email"
+            autoComplete="email"
             error={errors.email?.message}
-            {...register("email", {
-              required: "Email is required.",
-              pattern: {
-                value: /^\S+@\S+\.\S+$/,
-                message: "Please enter a valid email address.",
-              },
-            })}
+            {...register("email", emailValidation)}
           />
 
           <PasswordInput
             label="Password"
             placeholder="Enter your password"
+            autoComplete="current-password"
             error={errors.password?.message}
-            {...register("password", {
-              required: "Password is required.",
-            })}
+            {...register("password", passwordValidation)}
           />
 
           <div className="flex justify-end">

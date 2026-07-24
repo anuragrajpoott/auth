@@ -1,9 +1,11 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
 import { logoutUser } from "../features/auth/authApi";
 import { clearUser } from "../features/auth/authSlice";
+
+const APP_NAME = "AuthFlow";
 
 function MainLayout() {
   const dispatch = useDispatch();
@@ -37,10 +39,13 @@ function MainLayout() {
             to="/dashboard"
             className="text-xl font-bold text-slate-900"
           >
-            AuthFlow
+            {APP_NAME}
           </NavLink>
 
-          <div className="flex items-center gap-2">
+          <nav
+            aria-label="Main navigation"
+            className="flex items-center gap-2"
+          >
             <NavLink to="/dashboard" className={navLinkClass}>
               Dashboard
             </NavLink>
@@ -56,7 +61,7 @@ function MainLayout() {
             >
               Logout
             </button>
-          </div>
+          </nav>
         </div>
       </header>
 

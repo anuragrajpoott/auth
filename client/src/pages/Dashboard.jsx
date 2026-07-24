@@ -1,12 +1,15 @@
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 function Dashboard() {
-  const { user } = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.auth.user);
 
   if (!user) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+      <section
+        aria-label="Dashboard"
+        className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm"
+      >
         <h1 className="text-2xl font-semibold text-slate-900">
           Welcome
         </h1>
@@ -14,13 +17,20 @@ function Dashboard() {
         <p className="mt-2 text-slate-600">
           Unable to load your profile information.
         </p>
-      </div>
+      </section>
     );
   }
 
+  const verificationBadgeClass = user.isVerified
+    ? "bg-green-100 text-green-700"
+    : "bg-yellow-100 text-yellow-700";
+
   return (
     <div className="space-y-8">
-      <section className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+      <section
+        aria-label="Welcome"
+        className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm"
+      >
         <h1 className="text-3xl font-bold text-slate-900">
           Welcome, {user.name} 👋
         </h1>
@@ -30,7 +40,10 @@ function Dashboard() {
         </p>
       </section>
 
-      <section className="grid gap-6 md:grid-cols-2">
+      <section
+        aria-label="Account overview"
+        className="grid gap-6 md:grid-cols-2"
+      >
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-900">
             Account Information
@@ -64,11 +77,7 @@ function Dashboard() {
               </p>
 
               <span
-                className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
-                  user.isVerified
-                    ? "bg-green-100 text-green-700"
-                    : "bg-yellow-100 text-yellow-700"
-                }`}
+                className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${verificationBadgeClass}`}
               >
                 {user.isVerified ? "Verified" : "Pending"}
               </span>

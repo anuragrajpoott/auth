@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import Loader from "./components/loaders/Loader";
 import { getCurrentUser } from "./features/auth/authApi";
 import { clearUser, setUser } from "./features/auth/authSlice";
-import AppRoutes from "./routes/AppRoutes";
+import AppRoutes from "./components/routes/appRoutes";
 
 function App() {
   const dispatch = useDispatch();
@@ -13,8 +13,8 @@ function App() {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        const response = await getCurrentUser();
-        dispatch(setUser(response.data));
+        const user = await getCurrentUser();
+        dispatch(setUser(user.data));
       } catch {
         dispatch(clearUser());
       } finally {

@@ -11,6 +11,8 @@
 
   body {
     @apply min-h-screen bg-slate-50 text-slate-900 antialiased;
+    color-scheme: light;
+    text-rendering: optimizeLegibility;
     font-family:
       Inter,
       ui-sans-serif,
@@ -34,6 +36,14 @@
 
   a {
     @apply transition-colors;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    @apply block max-w-full;
   }
 }
 

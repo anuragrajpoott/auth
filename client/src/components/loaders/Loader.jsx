@@ -14,15 +14,20 @@ function Loader({
 }) {
   const spinner = (
     <div
+      aria-hidden="true"
       className={clsx(
         "animate-spin rounded-full border-slate-200 border-t-blue-600",
-        sizes[size]
+        sizes[size] ?? sizes.md
       )}
     />
   );
 
   const content = (
-    <div className={clsx("flex flex-col items-center gap-3", className)}>
+    <div
+      role="status"
+      aria-live="polite"
+      className={clsx("flex flex-col items-center gap-3", className)}
+    >
       {spinner}
 
       {message && (
