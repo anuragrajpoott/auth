@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import Loader from "./components/loaders/Loader";
 import { getCurrentUser } from "./features/auth/authApi";
 import { clearUser, setUser } from "./features/auth/authSlice";
-import AppRoutes from "./components/routes/appRoutes";
+import AppRoutes from "./components/routes/AppRoutes";
 
 function App() {
   const dispatch = useDispatch();
